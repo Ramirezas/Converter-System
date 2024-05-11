@@ -21,3 +21,7 @@ Decimal to Roman: 9 -> IX
 Roman to Decimal: IX -> 9
 Decimal to Roman: 9 -> IX
 Roman to Decimal: IX -> 9
+Roman to Decimal: XVII -> 17
+Decimal to Roman: 34 -> XXXIV
+Decimal to Roman: 9 -> IX
+Roman to Decimal: IX -> 9
