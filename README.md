@@ -1,113 +1,118 @@
-# Converter System
-Application Description:
-The application is a Roman numeral to decimal converter and vice versa. It allows users to input either Roman numerals or decimal numbers and convert them to the corresponding representation. Additionally, it provides functionality to view conversion history.
+###Converter Application Report
+##Introduction
+This report covers the development of a converter application that handles conversions between Roman numerals and decimal numbers. The application also maintains a history of conversions. The primary goals were to implement object-oriented programming (OOP) principles and design patterns to ensure the application is robust, maintainable, and easy to extend.
 
-How to Run:
-To run the program, execute main.py in the terminal.
+##What is your application?
+The application allows users to convert Roman numerals to decimal numbers and vice versa. It also provides a feature to display the history of conversions.
 
-How to Use:
-Upon running the program, users are prompted to choose the type of number they want to convert (Roman or Decimal). They can also view conversion history.
+##How to run the program?
+To run the program, ensure you have Python installed on your system. Then, execute the main.py file from the command line.
 
-Object-Oriented Programming Pillars:
-Encapsulation:
+##How to use the program?
+1. Run the program.
+2. Choose the type of conversion (Roman to Decimal or Decimal to Roman).
+3. Enter the number to be converted.
+4. View the conversion result.
+5. Optionally, view the history of conversions.
+
+##Body/Analysis
+
+##OOP Pillars Implementation
+
+#Abstraction
+Abstraction is implemented in the Converter class, which defines an abstract method convert. This method is overridden by subclasses to provide specific conversion logic.
 ```
-class HistoryHandler:
-    def __init__(self, filename):
-        self.filename = filename
-        self.history = self.read_history()
-
-    def read_history(self):
-        try:
-            with open(self.filename, 'r') as file:
-                return file.readlines()
-        except FileNotFoundError:
-            return []
-
-    def write_history(self, conversion):
-        with open(self.filename, 'a') as file:
-            file.write(conversion + '\n')
-
-    def print_history(self):
-        if not self.history:
-            print("No conversion history available.")
-        else:
-            for i, conversion in enumerate(self.history, 1):
-                print(f"{i}. {conversion.strip()}")
-```
-The HistoryHandler class encapsulates the conversion history data and file operations within its methods, ensuring controlled access to the data.
-Abstraction:
-```
-from abc import ABC, abstractmethod
-
-class Converter(ABC):
-    @abstractmethod
-    def convert(self, value):
+class Converter:
+    def init(self):
         pass
+
+    def convert(self, value):
+        raise NotImplementedError("Subclass must implement this method")
 ```
-Abstraction is achieved by providing an abstract base class Converter with a method convert(), hiding the implementation details.
-Inheritance:
+
+#Encapsulation
+Encapsulation is demonstrated in the RomanDecimalConverter class, where the conversion logic and data are encapsulated within methods and private attributes.
 ```
 class RomanDecimalConverter(Converter):
-    def convert(self, value):
+    def init(self):
+        super().init()
+        self.roman_numerals = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
+        self.decimal_to_roman_map = {1: 'I', 4: 'IV', 5: 'V', 9: 'IX', 10: 'X', 40: 'XL', 50: 'L', 90: 'XC', 100: 'C', 400: 'CD', 500: 'D', 900: 'CM', 1000: 'M'}
 ```
-The RomanDecimalConverter class inherits from the Converter class, inheriting common behavior and interface from the base class.
-Polymorphism:
+
+#Inheritance
+Inheritance is used where RomanDecimalConverter inherits from the Converter class, providing specific implementations for converting between Roman and decimal numbers.
 ```
-from abc import ABC, abstractmethod
-
-class Converter(ABC):
-    @abstractmethod
-    def convert(self, value):
-        pass
-
 class RomanDecimalConverter(Converter):
-    def convert(self, value):
-        # Implementation for Roman to Decimal and vice versa
-        pass
+    def roman_to_decimal(self, roman_numeral):
+        # Conversion logic here
 
-    # Other methods specific to RomanDecimalConverter
-
-# Usage of polymorphism
-def perform_conversion(converter, value):
-    result = converter.convert(value)
-    print(f"Conversion result: {result}")
-
-# Example usage
-if __name__ == "__main__":
-    roman_converter = RomanDecimalConverter()
-
-    perform_conversion(roman_converter, "XIV")
+    def decimal_to_roman(self, decimal_number):
+        # Conversion logic here
 ```
-Polymorphism is demonstrated through method overriding in the RomanDecimalConverter class, providing specific implementations for converting between Roman numerals and decimals.
 
-Design Patterns:
-Factory Method Pattern:
+#Polymorphism
+Polymorphism is demonstrated through the Converter interface, where the convert method can be used by any subclass to perform specific conversions.
 ```
-class ConverterFactory:
-    def get_converter(self):
-        return RomanDecimalConverter()
+def perform_conversion(converter: Converter, value):
+    return converter.convert(value)
 ```
-The ConverterFactory class implements the Factory Method pattern by providing a method get_converter() to create instances of converter classes, allowing for flexibility in creating converters without exposing instantiation logic.
-Singleton Pattern:
+
+##Design Patterns
+
+#Singleton Pattern
+The Singleton pattern is implemented in the HistoryHandler class to ensure there is only one instance managing the conversion history.
 ```
 class HistoryHandler:
     _instance = None
 
     def __new__(cls, filename):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
+        if not cls._instance:
+            cls._instance = super(HistoryHandler, cls).__new__(cls)
+            cls._instance.init(filename)
         return cls._instance
-```
-While not explicitly implemented, the HistoryHandler class exhibits characteristics of the Singleton pattern. Only one instance of HistoryHandler is typically needed to manage conversion history throughout the application.
 
-Results:
+    def init(self, filename):
+        self.filename = filename
+        self.history = self.read_history()
+```
+
+#Factory Method Pattern
+The Factory Method pattern is used in the ConverterFactory class to create instances of RomanDecimalConverter.
+```
+class ConverterFactory:
+    def get_converter(self):
+        return RomanDecimalConverter()
+```
+
+##Reading from and Writing to Files
+
+The application reads from and writes to a text file to maintain a history of conversions. This is handled by the HistoryHandler class.
+```
+def read_history(self):
+    try:
+        with open(self.filename, 'r') as file:
+            return file.readlines()
+    except FileNotFoundError:
+        return []
+
+def write_history(self, conversion):
+    with open(self.filename, 'a') as file:
+        file.write(conversion + '\n')
+```
+
+##Results and Summary
+
+#Results
 Successful Implementation: The program effectively implements the specified design patterns and object-oriented programming principles, including encapsulation, abstraction, inheritance, and polymorphism.
 Functional Conversion: Users can convert between Roman numerals and decimal numbers seamlessly, ensuring accurate and reliable conversions.
 Conversion History: The program maintains a conversion history, allowing users to track their previous conversions and view them whenever needed.
 Flexible Design: The use of design patterns such as the Factory Method Pattern ensures flexibility in creating converter instances, while the abstraction provided by the Converter base class allows for the addition of new converter types with minimal changes to existing code.
 
-Conclusions:
-The program achieves its primary objective of providing a user-friendly interface for numeral conversions, coupled with a robust conversion history feature.
-The implementation of object-oriented programming principles and design patterns ensures a well-structured and maintainable codebase.
-Going forward, the program can be extended by adding support for additional numeral systems, improving error handling mechanisms, or enhancing the user interface for a more intuitive experience.
-Overall, the program lays a solid foundation for further enhancements and improvements in the future.
+#Conclusions
+The application achieves the goal of converting between Roman numerals and decimal numbers while maintaining a history of conversions. It effectively uses OOP principles and design patterns to ensure maintainability and extensibility. Future improvements could include adding support for more number systems and enhancing the user interface.
+
+#Future Prospects
+Extend the application to support more types of conversions (e.g., binary, hexadecimal).
+Implement a graphical user interface (GUI) for better user interaction.
+Enhance error handling and input validation to make the application more robust.

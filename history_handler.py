@@ -1,5 +1,13 @@
 class HistoryHandler:
-    def __init__(self, filename):
+    _instance = None
+
+    def __new__(cls, filename):
+        if not cls._instance:
+            cls._instance = super(HistoryHandler, cls).__new__(cls)
+            cls._instance.init(filename)
+        return cls._instance
+
+    def init(self, filename):
         self.filename = filename
         self.history = self.read_history()
 
